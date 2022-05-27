@@ -1,0 +1,127 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class AlaCarte extends JFrame implements ActionListener
+{ 
+    static String[] yourChoicesItems = 
+                             {"Blueberry Muffin     74.48",
+                              "Strawberry Bagel     41.09",
+                              "Yogurt Milk          38.52",
+                              "Vanilla Ice Cream    141.2",
+                              "Brownies             128.5",
+                              "Toast                102.7",
+                              "French Fries         77.05",
+                              "Chocolate Cake       154.4",
+                              "Coffee               46.23",
+                              "Iced Tea             51.37",
+                              "Hot Chocolate        89.89"};
+
+    static double[] yourChoicesPrices = {74.48, 41.09, 38.52, 141.2,
+                                         128.5, 102.7, 77.05, 154.4,
+                                         46.23, 51.37, 89.89};
+    private static final long serialVersionUID = 1L;
+
+    private final JList yourChoices; 
+    private final JTextArea bill;
+
+    private final Container pane;
+    
+    public AlaCarte ()
+{
+        super ("Welcome to Java Kiosk");
+        
+            //Get the content pane and set its background color
+            //and layout manager
+    pane = getContentPane();
+    pane.setBackground (new Color (1, 200, 200)); 
+    pane.setLayout (new BorderLayout (5, 5));
+
+            //Create a label and place it at NORTH. Also
+            //set the font of this label.
+    JLabel yourChoicesJLabel = new JLabel("A LA CARTE MENU");
+    pane.add(yourChoicesJLabel, BorderLayout.NORTH); 
+    yourChoicesJLabel.setFont (new Font ("Dialog", Font.BOLD,20));
+
+            //Create a list and place it at WEST. Also
+            //set the font of this list.
+    yourChoices = new JList(yourChoicesItems); 
+    pane.add(new JScrollPane (yourChoices), BorderLayout.WEST);
+    yourChoices. setFont (new Font ("Bagamond", Font. BOLD, 14)); 
+    
+            //Create a text area and place it at EAST. Also 
+            //set the font of this text area.
+    bill= new JTextArea();
+    pane.add (bill, BorderLayout.EAST); 
+    bill. setFont (new Font ("Bagamond", Font.PLAIN, 12));
+
+            //Create a button and place it in the SOUTH region
+            //and add an action listener.
+    JButton button = new JButton ("Selection Completed"); 
+    pane.add (button, BorderLayout. SOUTH);
+    button.addActionListener(this);
+
+    setSize (500, 360); 
+    setVisible (true);
+    setDefaultCloseOperation (EXIT_ON_CLOSE) ;
+}
+
+            //method to display the order and the total cost 
+    private void displayBill()
+{
+    int[] listArray = yourChoices.getSelectedIndices();
+    double localTax = 0.065;
+    double tax; 
+    double subTotal = 0;
+    double total;
+
+        //Set the text area to nonedit mode and start 
+        //with an empty string.
+    bill.setEditable (false); 
+    bill.setText ("");
+
+        //Calculate the cost of the items ordered. 
+    for (int index = 0; index < listArray.length; index++) {
+        subTotal += yourChoicesPrices[listArray[index]];
+    }
+    
+    tax = localTax * subTotal; 
+    total = subTotal + tax;
+
+        //Display the costs.
+    bill.append("            JAVA KIOSK A LA CARTE\n\n"); 
+    bill.append("-------------------Welcome ------------------\n\n"); 
+    
+    for (int index = 0; index < listArray.length; index++)
+ { 
+    bill.append(yourChoicesItems [listArray[index]] + "\n");
+}
+
+    bill.append("\n");
+    bill.append("SUB TOTAL\t\t$"
+        + String.format("%.2f", subTotal) + "\n");
+    bill.append("TAX \t\t$"
+        + String.format ("%.2f", tax) + "\n"); 
+    bill.append("TOTAL \t\t$" 
+        + String.format("%.2f", total) + "\n\n"); 
+    bill.append("Thank you Have a Nice Day\n\n");
+    
+        //Reset list array.
+    yourChoices.clearSelection ();
+    repaint ();
+}
+    
+    @Override
+    public void actionPerformed (ActionEvent event)
+{
+    if (event.getActionCommand ().equals("Selection Completed")) {
+        displayBill();
+    }
+}
+
+    public static void main(String[] args) 
+    {
+    AlaCarte alc = new AlaCarte(); 
+    }
+    
+}
